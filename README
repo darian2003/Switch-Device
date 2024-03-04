@@ -1,20 +1,23 @@
-1 2 3
-    Pentru exercitiul 1, am urmarit pseudocodul si facut forwarding la pachete asa cum a fost descris. Am creat un dictionar mac_table care adauga/suprascria o noua intrare de fiecare data cand primea un pachet pe orice interfata.
-    Pentru exercitiul 2, am adaugat un dictionar pentru vlan-uri pe care l-am completat urmand fisierele din configs. In main, am plecat de la scheletul exercitiului anterior, la care am adaugat toate cazurile posibile de forwarding ale pachetelor primite, in functie de tipul interfetei de pe care vin (trunk/acces) si in functie de vlan-ul in care sunt vizibile (fie prin vlan tag in caz de trunk, fie cu ajutorul dictionarului in caz de acces).
-    Din cauza numarului mare de cazuri pe care se ramifica if-urile, am adaugat comentarii care sugereaza ramura logica pe care ne aflam.
-    Pentru exercitiul 3, am creat dictionarele port_type, care pentru fiecare port valabil il defineste daca este de tip BP (0), DP (1) sau RP (2), si port_state, care pentru fiecare port valabil ii defineste starea BLOCKING (0) sau LISTENING (1). 
-    Rutina noului thread va primi ca parametru variabila own_bridge_ID care este de fapt prioritatea switch-ului curent pentru a putea face comparatia cu root_bridge_ID si implicit pentru a determina daca mai trebuie sa trimita BPDU-uri in calitate de root bridge.
-    Variabila root_bridge_ID este declarata global pentru a ii extinde domeniul de vizibilitate si in interiorul rutinei thread-ului nou creat.
-    Pachetul BPDU pe care il trimit are structura:
+Implementare Spanning Tree Protocol (STP)
+
+Dictionarul mac_table adauga/suprascrie o noua intrare de fiecare data cand primeste un pachet de pe orice interfata.
+Am adaugat un dictionar pentru vlan-uri pe care l-am completat urmand fisierele din configs. 
+In main, am plecat de la scheletul exercitiului anterior, la care am adaugat toate cazurile posibile de forwarding ale pachetelor primite,
+in functie de tipul interfetei de pe care vin (trunk/acces) si in functie de vlan-ul in care sunt vizibile (fie prin vlan tag in caz de trunk, fie cu ajutorul dictionarului in caz de acces).
+
+     Am creat dictionarele port_type, care pentru fiecare port valabil defineste daca este de tip BP (0), DP (1) sau RP (2), si port_state, care pentru fiecare port valabil defineste starea BLOCKING (0) sau LISTENING (1). 
+Rutina noului thread va primi ca parametru variabila own_bridge_ID care este de fapt prioritatea switch-ului curent pentru a putea face comparatia cu root_bridge_ID
+si implicit pentru a determina daca mai trebuie sa trimita BPDU-uri in calitate de root bridge.
+Variabila root_bridge_ID este declarata global pentru a ii extinde domeniul de vizibilitate si in interiorul rutinei thread-ului nou creat.
+Pachetul BPDU pe care il trimit are structura:
 
     MAC_DEST | MAC_SRC | ROOT_BRIDGE_ID | OWN_BRIDGE_ID | COST
       BYTE[6]| BYTE[6] |      INT       |       INT     |  INT
 
-    si are in total 24 bytes. Pentru crearea si manipularea pachetelor BPDU am folosit functia 
-    def create_bpdu(root_id=0, own_id=0, cost=0), precum si functiile pack si unpack importate din struct.
+si are in total 24 bytes. Pentru crearea si manipularea pachetelor BPDU am folosit functia 
+def create_bpdu(root_id=0, own_id=0, cost=0), precum si functiile pack si unpack importate din struct.
 
-    In main, urmarind pseudocodul, am initializat intai dictionarele port_type si port_state, iar apoi in interiorul while-ului am implementat rutina de manipulare a pachetelor BPDU.
+In main, urmarind pseudocodul, am initializat intai dictionarele port_type si port_state, iar apoi in interiorul while-ului am implementat rutina de manipulare a pachetelor BPDU.
 
-    Singura modificare la partea implementata anterior la ex 2, este de a verifica starea portului pe care este primit pachetul si a da drop la acesta daca el este BLOCKED.
       
     
